@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+option go_package = "github.com/kidus-tiliksew/aqua-crims/grpc/proto";
+package notification;
+
+
+service NotificationService {
+  rpc DeleteNotification(DeleteNotificationRequest) returns (DeleteNotificationReply) {}
+  rpc DeleteNotificationByUser(DeleteNotificationByUserRequest) returns (DeleteNotificationByUserReply) {}
+  rpc GetNotificationByUser(GetNotificationByUserRequest) returns (GetNotificationByUserReply) {}
+}
+
+message DeleteNotificationRequest {
+  int64 id = 1;
+}
+
+message DeleteNotificationReply {
+  string message = 1;
+}
+
+message DeleteNotificationByUserRequest {
+  string userId = 1;
+}
+
+message DeleteNotificationByUserReply {
+  string message = 1;
+}
+
+message GetNotificationByUserRequest {
+  string userId = 1;
+}
+
+message Notification {
+  int32 id = 1;
+  string userId = 2;
+  string message = 3;
+}
+
+message GetNotificationByUserReply {
+  repeated Notification notifications = 1;
+}

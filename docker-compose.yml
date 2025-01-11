@@ -1,0 +1,27 @@
+version: "3.8"
+name: aqua-crims
+
+services:
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=info@qena.dev
+      - PGADMIN_DEFAULT_PASSWORD=password
+    ports:
+      - 5050:80
+  postgres:
+    hostname: postgres
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: survey
+    ports:
+      - "5432:5432"
+    volumes:
+      - "pgdata2:/var/lib/postgresql/data"
+      - "./docker/database:/docker-entrypoint-initdb.d"
+
+volumes:
+  pgdata2:

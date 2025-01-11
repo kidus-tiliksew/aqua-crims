@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: aquacrims
+    app.kubernetes.io/instance: aqua-crims
+  name: aquacrims
+  namespace: collect-survey
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aquacrims
+  template:
+    metadata:
+      labels:
+        app: aquacrims
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/arch
+                    operator: In
+                    values:
+                      - amd64
+                      - arm64
+      containers:
+        - env:
+            - name: DATABASE_DSN
+              value: host=0.0.0.0 user=postgres password=password dbname=aqua-crims
+            - name: AMPQ_DSN
+              value: amqp://guest:guest@localhost:5672/
+            - name: HTTP_PORT
+              value: 8080
+            - name: GRPC_PORT
+              value: 9090
+          image: 123.dkr.ecr.us-east-2.amazonaws.com/aqua-crims:latest
+          imagePullPolicy: IfNotPresent
+          name: aquacrims
+          ports:
+            - containerPort: 8085
+              name: http
+            - containerPort: 9090
+              name: grpc
+          resources: {}
+          stdin: true
+          tty: true
+      dnsPolicy: ClusterFirst
+      nodeSelector:
+        kubernetes.io/os: linux
+      serviceAccountName: default
