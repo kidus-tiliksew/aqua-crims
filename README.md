@@ -68,3 +68,32 @@ The gRPC server provides the following methods:
 - `DeleteNotification`: Deletes a notification by ID.
 - `DeleteNotificationByUser`: Deletes all notifications for a user.
 - `GetNotificationsByUser`: Get's all notifications for a user.
+
+## Design 
+
+The core application follows the principles of Clean Architecture, also known as Hexagonal Architecture or Onion Architecture. Emphasizing separation of concerns and dependency inversion, making the application more modular, testable, and maintainable. 
+
+## Structure
+
+The file structure follows a CQRS pattern.
+
+### Commands:
+
+- **Purpose**: Encapsulate all the write operations (commands) of the application.
+- **Files**: `customer_create.go`, `cloud_resource_create.go`, `notification_create.go`, etc.
+- **Handlers**: Each command has a corresponding handler that contains the business logic for executing the command.
+
+### Queries:
+
+- **Purpose**: Encapsulate all the read operations (queries) of the application.
+- **Files**: `cloud_resource_get.go`, `notification_get_by_user.go`, etc.
+- **Handlers**: Each query has a corresponding handler that contains the business logic for executing the query.
+
+### Application:
+
+- **Purpose**: Acts as a facade that exposes the commands and queries to the rest of the application.
+- **Files**: `application.go`
+- Components:
+   - **Commands Interface**: Defines all the command methods.
+   - **Queries Interface**: Defines all the query methods.
+   - **Application Struct**: Implements the App interface by embedding appCommands and appQueries.
