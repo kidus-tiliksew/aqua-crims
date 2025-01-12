@@ -33,12 +33,18 @@ Aqua Cloud Resource Inventory Management System is a service for managing custom
 
 ## Usage
 
-### Running the HTTP and gRPC Servers
+### Running the Services
 
-To start the HTTP and gRPC servers, run:
+To start the core HTTP and gRPC servers, run:
 
 ```sh
-go run .
+go run cmd/core/main.go
+```
+
+To start the notification service, run:
+
+```sh
+go run cmd/notification/main.go
 ```
 
 ### Seeding the Database
@@ -46,7 +52,7 @@ go run .
 To seed the database with initial cloud resources, run:
 
 ```sh
-go run cmd/cli.go seed
+go run cmd/cli/main.go seed
 ```
 
 ## HTTP API Endpoints
@@ -67,7 +73,7 @@ The gRPC server provides the following methods:
 
 - `DeleteNotification`: Deletes a notification by ID.
 - `DeleteNotificationByUser`: Deletes all notifications for a user.
-- `GetNotificationsByUser`: Get's all notifications for a user.
+- `GetNotificationsByUser`: Gets all notifications for a user.
 
 ## Design 
 
