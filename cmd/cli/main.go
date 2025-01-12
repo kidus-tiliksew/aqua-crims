@@ -27,12 +27,25 @@ var SeedCmd = &cobra.Command{
 			log.Fatalf("failed to connect to database: %v", err)
 		}
 		resourceRepo := postgres.NewCloudResourceRepository(db)
-		err = resourceRepo.Create(context.Background(), &domain.CloudResource{
+		var errors []error
+
+		errors = append(errors, resourceRepo.Create(context.Background(), &domain.CloudResource{
 			Name:   "S3 Bucket",
 			Region: "us-west-2",
-		})
-		if err != nil {
-			log.Fatalf("failed to seed resources: %v", err)
+		}))
+		errors = append(errors, resourceRepo.Create(context.Background(), &domain.CloudResource{
+			Name:   "EC2 Instance",
+			Region: "us-west-2",
+		}))
+		errors = append(errors, resourceRepo.Create(context.Background(), &domain.CloudResource{
+			Name:   "RDS Instance",
+			Region: "us-west-2",
+		}))
+
+		for _, err := range errors {
+			if err != nil {
+				log.Fatalf("failed to seed resources: %v", err)
+			}
 		}
 		fmt.Println("Successfully seeded cloud resources.")
 	},
