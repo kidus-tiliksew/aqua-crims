@@ -9,7 +9,7 @@ import (
 	"github.com/kidus-tiliksew/aqua-crims/application"
 	grpcservice "github.com/kidus-tiliksew/aqua-crims/grpc"
 	"github.com/kidus-tiliksew/aqua-crims/grpc/proto"
-	"github.com/kidus-tiliksew/aqua-crims/notification"
+	"github.com/kidus-tiliksew/aqua-crims/rabbitmq"
 	"github.com/kidus-tiliksew/aqua-crims/postgres"
 	"google.golang.org/grpc"
 	pg "gorm.io/driver/postgres"
@@ -47,7 +47,7 @@ func main() {
 	if dsn == "" {
 		log.Panic("AMPQ_DSN environment variable is not set")
 	}
-	ns, err := notification.NewNotificationService(notifications, ampDsn, NotificationExchange)
+	ns, err := rabbitmq.NewNotificationService(notifications, ampDsn, NotificationExchange)
 	if err != nil {
 		log.Panicf("failed to initialize notification service: %v", err)
 	}

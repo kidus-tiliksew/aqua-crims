@@ -1,5 +1,5 @@
-# Use the official Golang image as the base image
-FROM golang:1.23-alpine
+# Build stage
+FROM golang:1.23-alpine AS builder
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -13,11 +13,25 @@ RUN go mod download
 # Copy the source code into the container
 COPY . .
 
-# Build the application
-RUN go build -o main .
+# Build the core service
+RUN go build -o core ./cmd/core/main.go
 
-# Expose the port the app runs on
+# Build the notification service
+RUN go build -o notification ./cmd/notification/main.go
+
+# Final stage
+FROM alpine:latest
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the built executables from the builder stage
+COPY --from=builder /app/core .
+COPY --from=builder /app/notification .
+
+# Expose the ports the apps run on
 EXPOSE 8080
+EXPOSE 9090
 
-# Command to run the executable
-CMD ["./main"]
+# Command to run both executables
+CMD ["sh", "-c", "./core & ./notification"]

@@ -8,7 +8,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/kidus-tiliksew/aqua-crims/application"
 	"github.com/kidus-tiliksew/aqua-crims/controllers"
-	"github.com/kidus-tiliksew/aqua-crims/notification"
+	"github.com/kidus-tiliksew/aqua-crims/rabbitmq"
 	"github.com/kidus-tiliksew/aqua-crims/postgres"
 
 	pg "gorm.io/driver/postgres"
@@ -47,7 +47,7 @@ func main() {
 	if dsn == "" {
 		log.Panic("AMPQ_DSN environment variable is not set")
 	}
-	ns, err := notification.NewNotificationService(notifications, ampDsn, NotificationExchange)
+	ns, err := rabbitmq.NewNotificationService(notifications, ampDsn, NotificationExchange)
 	if err != nil {
 		log.Panicf("failed to initialize notification service: %v", err)
 	}
