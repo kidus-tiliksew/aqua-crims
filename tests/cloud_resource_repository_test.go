@@ -73,14 +73,7 @@ func (r *inMemoryCloudResourceRepository) Create(ctx context.Context, resource *
 	return nil
 }
 
-type InMemoryNotificationReceiver struct {
-	messages []string
-}
 
-func (n *InMemoryNotificationReceiver) SendStructuredMessage(userID, message string) error {
-	n.messages = append(n.messages, message)
-	return nil
-}
 
 func TestInMemoryCloudResourceRepository_Create(t *testing.T) {
 	repo := &inMemoryCloudResourceRepository{}
