@@ -39,11 +39,10 @@ func NewNotificationService(notifications domain.NotificationRepository, dsn str
 	ns := &NotificationService{
 		conn: conn, channel: ch, exchange: exchangeName, notifications: notifications,
 	}
-	go ns.subscribe()
 	return ns, nil
 }
 
-func (ns *NotificationService) subscribe() {
+func (ns *NotificationService) Subscribe() {
 	q, err := ns.channel.QueueDeclare("", false, true, true, false, nil)
 	if err != nil {
 		log.Println("Queue declare error:", err)

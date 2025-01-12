@@ -2,10 +2,7 @@ package main
 
 import (
 	"log"
-	"net"
 	"os"
-
-	"google.golang.org/grpc"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -14,8 +11,6 @@ import (
 	"github.com/kidus-tiliksew/aqua-crims/notification"
 	"github.com/kidus-tiliksew/aqua-crims/postgres"
 
-	grpcservice "github.com/kidus-tiliksew/aqua-crims/grpc"
-	"github.com/kidus-tiliksew/aqua-crims/grpc/proto"
 	pg "gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -65,23 +60,6 @@ func main() {
 	cloudResourceController := controllers.NewCloudResourceController(app)
 	notificationController := controllers.NewNotificationController(app)
 
-	// Start gRPC server
-	go func() {
-		grpcPort := os.Getenv("GRPC_PORT")
-		if grpcPort == "" {
-			grpcPort = "9090"
-		}
-		lis, err := net.Listen("tcp", ":"+grpcPort)
-		if err != nil {
-			log.Fatalf("failed to start gRPC server: %v", err)
-		}
-		grpcServer := grpc.NewServer()
-		proto.RegisterNotificationServiceServer(grpcServer, grpcservice.NewNotificationGRPCServer(app))
-		log.Printf("gRPC server listening on %v", lis.Addr())
-		if err := grpcServer.Serve(lis); err != nil {
-			log.Fatalf("failed to serve gRPC: %v", err)
-		}
-	}()
 
 	r := gin.Default()
 	r.POST("/customers", customerController.CustomerCreate)

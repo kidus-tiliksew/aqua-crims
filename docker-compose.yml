@@ -22,6 +22,11 @@ services:
     volumes:
       - "pgdata2:/var/lib/postgresql/data"
       - "./docker/database:/docker-entrypoint-initdb.d"
+  rabbitmq:
+    image: rabbitmq:4.0-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 
 volumes:
   pgdata2:
